@@ -1,11 +1,20 @@
 # qs_device_info
 
-`qs_device_info` 是一个 Flutter 设备与应用信息工具库，用于统一获取设备标识、设备型号、系统版本、应用版本、应用名称、应用 ID、屏幕尺寸以及当前运行平台。
+`qs_device_info` 是一个 Flutter 设备与应用信息工具库，用于统一获取设备用户标识、设备类型、设备型号、系统版本、应用版本、应用名称、应用 ID 以及屏幕逻辑尺寸。
 
 ## 支持平台
 
 - Android
 - iOS
+
+## 功能
+
+- 获取并缓存当前安装环境的用户标识。
+- 判断当前设备是否为平板。
+- 获取应用版本号、应用名称与应用 ID。
+- 获取设备型号、系统版本与当前平台类型。
+- 获取当前屏幕逻辑尺寸。
+- 通过原生 MethodChannel 获取平台版本。
 
 ## 安装
 
@@ -13,7 +22,7 @@
 
 ```yaml
 dependencies:
-  qs_device_info: ^1.0.0
+  qs_device_info: ^1.0.1
 ```
 
 如果使用本地路径依赖：
@@ -62,11 +71,11 @@ Future<void> loadDeviceInfo() async {
 }
 ```
 
-## API 说明
+## API
 
 ### getUserId
 
-获取当前设备的用户标识。
+获取当前安装环境的用户标识。
 
 ```dart
 final userId = await QsDeviceInfo.getUserId();
@@ -75,9 +84,8 @@ final userId = await QsDeviceInfo.getUserId();
 说明：
 
 - iOS 优先使用 `identifierForVendor`。
-- Android 优先使用系统返回的设备 ID。
-- 如果无法获取设备 ID，会生成一个 UUID。
-- 获取到的值会通过安全存储缓存，后续调用会优先返回缓存值。
+- 无法获取设备标识时，会生成一个 UUID。
+- 获取到的值会通过 `qs_secure_storage` 缓存，后续调用会优先返回缓存值。
 
 ### isPad
 
@@ -89,8 +97,8 @@ final isPad = await QsDeviceInfo.isPad();
 
 说明：
 
-- iOS 会根据设备 `modelName` 判断是否包含 `pad`。
-- Android 会根据设备 `model` 判断是否包含 `pad`。
+- iOS 根据 `modelName` 判断是否包含 `pad`。
+- Android 根据 `model` 判断是否包含 `pad`。
 - 获取失败时返回 `false`。
 
 ### getAppVersion
@@ -118,7 +126,7 @@ final model = await QsDeviceInfo.getDeviceModel();
 说明：
 
 - iOS 返回设备 machine 标识，例如 `iPhone16,2`。
-- Android 返回设备 model。
+- Android 返回设备 `model`。
 - 获取失败时返回 `unknown`。
 
 ### getDeviceOSVersion
@@ -176,6 +184,11 @@ final screenInfo = QsDeviceInfo.getScreenInfo();
 ```text
 390x844
 ```
+
+说明：
+
+- 返回的是逻辑尺寸，不是物理像素尺寸。
+- 如果当前没有可用视图，返回空字符串。
 
 ### getAppId
 
@@ -241,11 +254,14 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
 
   Future<void> _loadInfo() async {
     final userId = await QsDeviceInfo.getUserId();
+    final isPad = await QsDeviceInfo.isPad();
     final appName = await QsDeviceInfo.getAppName();
     final appVersion = await QsDeviceInfo.getAppVersion();
     final deviceModel = await QsDeviceInfo.getDeviceModel();
     final osVersion = await QsDeviceInfo.getDeviceOSVersion();
+    final deviceType = QsDeviceInfo.getDeviceType();
     final screenInfo = QsDeviceInfo.getScreenInfo();
+    final appId = await QsDeviceInfo.getAppId(iOSAppId: 'your-ios-app-id');
 
     if (!mounted) {
       return;
@@ -254,11 +270,14 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
     setState(() {
       _content = '''
 userId: $userId
+isPad: $isPad
 appName: $appName
 appVersion: $appVersion
 deviceModel: $deviceModel
 osVersion: $osVersion
+deviceType: $deviceType
 screenInfo: $screenInfo
+appId: $appId
 ''';
     });
   }
@@ -279,6 +298,7 @@ screenInfo: $screenInfo
 ## 注意事项
 
 - `getUserId` 会将设备标识缓存到安全存储中，适合用于业务侧稳定识别当前安装环境。
+- `getUserId` 不是广告标识，也不建议用于跨应用、跨设备追踪。
 - `getAppId` 在 iOS 上需要手动传入 App Store 应用 ID。
 - `getScreenInfo` 返回的是逻辑尺寸，不是物理像素尺寸。
 - 当前插件主要面向 Android 与 iOS 使用。

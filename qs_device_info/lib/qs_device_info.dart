@@ -29,9 +29,6 @@ class QsDeviceInfo {
       if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
         deviceId = iosInfo.identifierForVendor; // iOS的设备标识符
-      } else if (Platform.isAndroid) {
-        final androidInfo = await deviceInfo.androidInfo;
-        deviceId = androidInfo.id; // Android的设备ID
       }
     } catch (e) {
       QsLog.error("获取设备信息失败 + $e");
