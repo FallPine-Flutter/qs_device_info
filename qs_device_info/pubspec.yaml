@@ -1,6 +1,6 @@
 name: qs_device_info
 description: "获取设备信息"
-version: 1.0.1
+version: 1.0.2
 homepage: "https://github.com/FallPine-Flutter/qs_device_info"
 
 environment:
@@ -10,14 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
   device_info_plus: ^13.2.0   # 设备信息插件
   package_info_plus: ^10.2.1  # 包信息插件
   uuid: ^4.6.0    # UUID插件
-  qs_log: # 日志插件
-    path: ../../qs_log/qs_log
-  qs_secure_storage: # 安全存储插件
-    path: ../../qs_secure_storage/qs_secure_storage
+  qs_log: ^1.0.0 # 日志插件
+  qs_secure_storage: ^1.0.3 # 安全存储插件
 
 dev_dependencies:
   flutter_test:

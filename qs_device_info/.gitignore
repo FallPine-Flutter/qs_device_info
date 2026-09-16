@@ -40,3 +40,9 @@ migrate_working_dir/
 
 # FVM keeps the selected SDK symlink here. Keep .fvmrc in Git.
 .fvm/flutter_sdk
+
+# Bundled example app dependency resolution
+**/example/pubspec.lock
+**/example/ios/Podfile
+**/example/ios/Flutter/Debug.xcconfig
+**/example/ios/Flutter/Release.xcconfig

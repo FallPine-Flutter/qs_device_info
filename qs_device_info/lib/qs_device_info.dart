@@ -5,15 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:qs_log/qs_log.dart';
 import 'package:qs_secure_storage/qs_secure_storage.dart';
-
-import 'qs_device_info_platform_interface.dart';
 import 'package:uuid/uuid.dart';
 
 class QsDeviceInfo {
-  Future<String?> getPlatformVersion() {
-    return QsDeviceInfoPlatform.instance.getPlatformVersion();
-  }
-
   /// 获取userId
   static Future<String> getUserId() async {
     const kDeviceIdKey = "_deviceIdKey";

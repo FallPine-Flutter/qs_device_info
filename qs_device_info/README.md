@@ -211,25 +211,6 @@ final appId = await QsDeviceInfo.getAppId(iOSAppId: 'your-ios-app-id');
 final appName = await QsDeviceInfo.getAppName();
 ```
 
-### getPlatformVersion
-
-获取原生平台版本。
-
-```dart
-final plugin = QsDeviceInfo();
-final platformVersion = await plugin.getPlatformVersion();
-```
-
-返回值示例：
-
-```text
-Android 14
-```
-
-```text
-iOS 17.0
-```
-
 ## 完整示例
 
 ```dart
