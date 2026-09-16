@@ -14,7 +14,6 @@
 - 获取应用版本号、应用名称与应用 ID。
 - 获取设备型号、系统版本与当前平台类型。
 - 获取当前屏幕逻辑尺寸。
-- 通过原生 MethodChannel 获取平台版本。
 
 ## 安装
 
@@ -22,7 +21,7 @@
 
 ```yaml
 dependencies:
-  qs_device_info: ^1.0.1
+  qs_device_info: ^1.0.3
 ```
 
 如果使用本地路径依赖：
@@ -84,7 +83,8 @@ final userId = await QsDeviceInfo.getUserId();
 说明：
 
 - iOS 优先使用 `identifierForVendor`。
-- 无法获取设备标识时，会生成一个 UUID。
+- Android 不读取硬件标识，首次调用时生成一个 UUID。
+- iOS 无法获取 `identifierForVendor` 时，也会生成一个 UUID。
 - 获取到的值会通过 `qs_secure_storage` 缓存，后续调用会优先返回缓存值。
 
 ### isPad
@@ -127,7 +127,8 @@ final model = await QsDeviceInfo.getDeviceModel();
 
 - iOS 返回设备 machine 标识，例如 `iPhone16,2`。
 - Android 返回设备 `model`。
-- 获取失败时返回 `unknown`。
+- 获取设备信息发生异常时返回 `unknown`。
+- 在 Android、iOS 以外的平台调用时返回空字符串。
 
 ### getDeviceOSVersion
 
@@ -146,6 +147,13 @@ iOS 17.0
 ```text
 samsung 14
 ```
+
+说明：
+
+- iOS 返回 `系统名称 系统版本`。
+- Android 返回 `设备品牌 系统版本`。
+- 获取设备信息发生异常时返回 `unknown`。
+- 在 Android、iOS 以外的平台调用时返回空字符串。
 
 ### getDeviceType
 
